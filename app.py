@@ -1,262 +1,124 @@
-<!-- 🌟 PROJECTS & EXPERIENCE SECTION (Full Updated Version) -->
+import streamlit as st
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain.chains import RetrievalQA
+import tempfile, os, shutil
 
-<section id="projects" class="projects">
-  <h2 class="section-title">Featured Projects</h2>
-  <p class="section-subtitle">
-    A showcase of AI, software engineering, and data-driven solutions built during my final year of BSc Computer Science at the University of Hull.
-  </p>
+# -------------------- PAGE CONFIG --------------------
+st.set_page_config(page_title="AI Document Assistant", page_icon="📄", layout="wide")
 
-  <div class="projects-grid">
-
-    <!-- 🧠 PROJECT 1: AI Document Assistant -->
-    <div class="project-card">
-      <div class="project-header">
-        <h3>AI-Powered Document Assistant (RAG Application)</h3>
-        <p>Interactive chatbot that allows users to upload PDFs and ask natural-language questions — powered by Retrieval-Augmented Generation (RAG).</p>
-      </div>
-
-      <div class="meta-grid">
-        <div class="meta">
-          <h5>Objective</h5>
-          <div>Automate document understanding through intelligent question-answering.</div>
-        </div>
-        <div class="meta">
-          <h5>Timeline</h5>
-          <div>2-Week Development Sprint</div>
-        </div>
-        <div class="meta">
-          <h5>Role</h5>
-          <div>Full-Stack AI Developer</div>
-        </div>
-        <div class="meta">
-          <h5>Tech Stack</h5>
-          <div>Python, LangChain, OpenAI API, Streamlit, ChromaDB, PyPDF</div>
-        </div>
-      </div>
-
-      <div class="project-details">
-        <div class="detail-section">
-          <h5><i class="fas fa-robot"></i> What It Does</h5>
-          <ul>
-            <li>Uploads and reads PDFs, splitting text into semantic chunks for context retrieval.</li>
-            <li>Embeds document data using OpenAI embeddings and stores them in a vector database.</li>
-            <li>Uses GPT-3.5-turbo to generate accurate, context-aware answers.</li>
-            <li>Deployed on Streamlit Cloud for live use by recruiters and users.</li>
-          </ul>
-        </div>
-
-        <div class="detail-section">
-          <h5><i class="fas fa-lightbulb"></i> Real-World Applications</h5>
-          <ul>
-            <li>Legal contract analysis and policy review automation.</li>
-            <li>Academic paper summarisation and keyword extraction.</li>
-            <li>HR document or compliance report search automation.</li>
-          </ul>
-        </div>
-
-        <div class="detail-section">
-          <h5><i class="fas fa-trophy"></i> Achievements</h5>
-          <ul>
-            <li>Completed fully functional RAG pipeline and live web app deployment in 2 weeks.</li>
-            <li>Integrated multiple AI tools — embeddings, retrieval, and LLM inference.</li>
-            <li>Demonstrated full AI lifecycle understanding from concept to production.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="cta" style="margin-top:2rem">
-        <a class="btn primary" href="https://ai-document-assistant-whiney001.streamlit.app" target="_blank" rel="noopener">
-          <i class="fas fa-globe"></i> Live Demo
-        </a>
-        <a class="btn secondary" href="https://github.com/whiney001/ai-document-assistant" target="_blank" rel="noopener">
-          <i class="fab fa-github"></i> View on GitHub
-        </a>
-      </div>
-    </div>
-
-    <!-- 🚚 PROJECT 2: Smart City Delivery Optimisation -->
-    <div class="project-card">
-      <div class="project-header">
-        <h3>Smart City Delivery Optimisation</h3>
-        <p>Machine learning-based urban delivery route optimisation using predictive modelling and graph algorithms.</p>
-      </div>
-
-      <div class="meta-grid">
-        <div class="meta">
-          <h5>Objective</h5>
-          <div>Reduce delivery costs and time with ML-driven path optimisation.</div>
-        </div>
-        <div class="meta">
-          <h5>Role</h5>
-          <div>Data Scientist & Python Developer</div>
-        </div>
-        <div class="meta">
-          <h5>Tech Stack</h5>
-          <div>Python, NumPy, Pandas, Dijkstra, BFS, A*, Neural Networks</div>
-        </div>
-      </div>
-
-      <div class="project-details">
-        <div class="detail-section">
-          <h5><i class="fas fa-cogs"></i> Highlights</h5>
-          <ul>
-            <li>Developed predictive models to estimate traversal costs.</li>
-            <li>Integrated pathfinding algorithms (A*, BFS, Dijkstra) for route evaluation.</li>
-            <li>Compared regression and neural approaches for optimal prediction accuracy.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="cta" style="margin-top:2rem">
-        <a class="btn secondary" href="https://github.com/whiney001/smartcity-delivery" target="_blank" rel="noopener">
-          <i class="fab fa-github"></i> View on GitHub
-        </a>
-      </div>
-    </div>
-
-    <!-- 💼 PROJECT 3: LightHR Fairness Analytics -->
-    <div class="project-card">
-      <div class="project-header">
-        <h3>LightHR – AI Fairness & Bias Detection</h3>
-        <p>Analytical project evaluating fairness in AI-driven HR recruitment using association rule mining and fairness metrics.</p>
-      </div>
-
-      <div class="meta-grid">
-        <div class="meta">
-          <h5>Objective</h5>
-          <div>Detect and mitigate bias in AI resume-screening algorithms.</div>
-        </div>
-        <div class="meta">
-          <h5>Role</h5>
-          <div>Data Scientist</div>
-        </div>
-        <div class="meta">
-          <h5>Tech Stack</h5>
-          <div>Python, Pandas, Scikit-learn, Fairlearn, Matplotlib</div>
-        </div>
-      </div>
-
-      <div class="project-details">
-        <div class="detail-section">
-          <h5><i class="fas fa-balance-scale"></i> Results</h5>
-          <ul>
-            <li>Applied fairness metrics such as statistical parity and disparate impact.</li>
-            <li>Improved dataset representation using discretisation and resampling.</li>
-            <li>Generated interpretable visual reports for stakeholder presentation.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="cta" style="margin-top:2rem">
-        <a class="btn secondary" href="https://github.com/whiney001/lighthr" target="_blank" rel="noopener">
-          <i class="fab fa-github"></i> View on GitHub
-        </a>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- 💼 WORK EXPERIENCE SECTION -->
-<section id="experience" class="experience">
-  <h2 class="section-title">Professional Experience</h2>
-  <p class="section-subtitle">
-    Hands-on experience working with real clients and businesses, applying technical skills to practical software and data challenges.
-  </p>
-
-  <div class="experience-grid">
-
-    <!-- 🏢 EAGLES WING LTD -->
-    <div class="experience-card">
-      <h3>Eagles Wing Limited (Remote)</h3>
-      <p class="role">Technology Associate | June 2024 – Present</p>
-      <ul>
-        <li>Worked on system maintenance, backend development, and data automation processes for client projects.</li>
-        <li>Contributed to improving company’s internal digital operations through Python scripting and database management.</li>
-        <li>Collaborated with cross-functional teams remotely using Agile practices and Git-based version control.</li>
-      </ul>
-    </div>
-
-    <!-- 🎬 STEP RECRUITMENT INTERNSHIP -->
-    <div class="experience-card">
-      <h3>Step Recruitment (Digital Transformation Internship)</h3>
-      <p class="role">Web Maintenance & Digital Support | July 2025 – September 2025</p>
-      <ul>
-        <li>Supported an entertainment company’s digital transformation by maintaining and updating their public website.</li>
-        <li>Implemented SEO updates, content formatting, and accessibility fixes to improve user engagement.</li>
-        <li>Worked directly with stakeholders to analyse traffic data and optimise performance using analytics tools.</li>
-      </ul>
-    </div>
-
-  </div>
-</section>
-
-<!-- 🎨 BUTTON & LAYOUT STYLES -->
+# -------------------- CUSTOM CSS --------------------
+st.markdown("""
 <style>
-  .section-title {
-    font-size: 2rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 1rem;
-    color: #1a1a1a;
-  }
-  .section-subtitle {
-    text-align: center;
-    color: #6b6b6b;
-    margin-bottom: 2rem;
-  }
-  .projects-grid, .experience-grid {
-    display: grid;
-    gap: 2rem;
-  }
-  .project-card, .experience-card {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  }
-  .project-header h3, .experience-card h3 {
-    color: #ff6b9d;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  .meta-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  .meta h5 {
-    color: #e5527e;
-    margin-bottom: 0.2rem;
-  }
-  .btn.primary {
-    background: linear-gradient(135deg, #ff6b9d, #e5527e);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.4rem;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s;
-    text-decoration: none;
-    margin-right: 0.5rem;
-  }
-  .btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(255,107,157,0.3);
-  }
-  .btn.secondary {
-    background: transparent;
-    color: #ff6b9d;
-    border: 2px solid #ff6b9d;
-    padding: 0.6rem 1.4rem;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s;
-    text-decoration: none;
-  }
-  .btn.secondary:hover {
-    background: #ff6b9d;
-    color: #fff;
-  }
+    body {background-color:#0b0f16; color:#e8edf2;}
+    .main {background-color:#0b0f16;}
+    h1,h2,h3,h4 {color:#fff;}
+    .css-1cpxqw2, .stTextInput>div>div>input {color:#fff !important;}
+    .stButton>button {
+        background:linear-gradient(135deg,#ff6b9d,#e5527e);
+        border:none;color:white;padding:0.6rem 1.6rem;
+        border-radius:8px;font-weight:600;
+        transition:all .3s;
+    }
+    .stButton>button:hover {transform:translateY(-2px);
+        box-shadow:0 4px 15px rgba(255,107,157,0.3);}
+    .banner {
+        background:linear-gradient(135deg,#ff6b9d 0%,#e5527e 40%,#6366f1 100%);
+        padding:1.2rem;border-radius:14px;text-align:center;
+        color:#fff;margin-bottom:1.5rem;box-shadow:0 5px 20px rgba(0,0,0,0.25);
+    }
+    .footer {text-align:center;color:#9ba3b1;font-size:0.9rem;margin-top:2rem;}
 </style>
+""", unsafe_allow_html=True)
+
+# -------------------- HEADER --------------------
+st.markdown("""
+<div class="banner">
+    <h2>📄 AI Document Assistant</h2>
+    <p>Built by <b>Winnie Kenneth</b> – Final-Year Computer Science Student, University of Hull</p>
+</div>
+""", unsafe_allow_html=True)
+
+# -------------------- API KEY --------------------
+try:
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+except KeyError:
+    st.error("⚠️ Missing OpenAI API key in Streamlit Secrets.")
+    st.stop()
+
+# -------------------- FILE UPLOAD --------------------
+uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
+
+if uploaded_file:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_file.write(uploaded_file.read())
+        tmp_path = tmp_file.name
+
+    with st.spinner("🔍 Processing your document..."):
+        try:
+            # load pdf
+            loader = PyPDFLoader(tmp_path)
+            docs = loader.load()
+
+            # split text
+            splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+            chunks = splitter.split_documents(docs)
+
+            # temp folder for chroma to prevent tenant error
+            chroma_tmp = tempfile.mkdtemp()
+            embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+            vectorstore = Chroma.from_documents(
+                chunks, embedding=embeddings, persist_directory=chroma_tmp
+            )
+
+            # retrieval + llm
+            retriever = vectorstore.as_retriever(search_kwargs={"k":3})
+            llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
+            qa = RetrievalQA.from_chain_type(
+                llm=llm, chain_type="stuff", retriever=retriever, return_source_documents=True
+            )
+
+            st.success(f"✅ Document processed ({len(docs)} pages). Ask your questions below!")
+
+            # QUESTION INPUT
+            question = st.text_input("💬 Ask a question about your document:")
+
+            if question:
+                with st.spinner("Thinking..."):
+                    result = qa({"query": question})
+                    st.markdown("### ✨ Answer")
+                    st.write(result["result"])
+
+                    with st.expander("📚 Source text used"):
+                        for i, doc in enumerate(result["source_documents"]):
+                            st.markdown(f"**Chunk {i+1}:**")
+                            st.text(doc.page_content[:600] + "...")
+                            st.markdown("---")
+
+        except Exception as e:
+            st.error(f"Error: {str(e)}")
+        finally:
+            if os.path.exists(tmp_path): os.remove(tmp_path)
+            if os.path.exists(chroma_tmp): shutil.rmtree(chroma_tmp)
+
+else:
+    st.info("""
+    **How to use**
+    1. Upload a PDF document  
+    2. Wait for it to be processed  
+    3. Ask any question – summaries, insights, or keyword lookups  
+    """)
+
+# -------------------- FOOTER --------------------
+st.markdown("""
+<div class="footer">
+    <p>Powered by LangChain ⚙️ OpenAI 🤖 Streamlit ☁️</p>
+    <p>
+        <a href="https://whiney001.github.io" style="color:#ff6b9d;">Portfolio</a> |
+        <a href="https://github.com/Whiney001" style="color:#ff6b9d;">GitHub</a> |
+        <a href="https://linkedin.com/in/winnie-kenneth-28a862287" style="color:#ff6b9d;">LinkedIn</a>
+    </p>
+</div>
+""", unsafe_allow_html=True)
