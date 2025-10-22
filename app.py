@@ -1,124 +1,316 @@
-import streamlit as st
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain.chains import RetrievalQA
-import tempfile, os, shutil
+<!-- 💻 PROJECTS SECTION -->
+<section id="projects" class="projects">
+  <h2 class="section-title">Featured Projects</h2>
+  <p class="section-subtitle">
+    A showcase of full-stack, AI, and software engineering projects I've developed as a final-year Computer Science student.
+  </p>
 
-# -------------------- PAGE CONFIG --------------------
-st.set_page_config(page_title="AI Document Assistant", page_icon="📄", layout="wide")
+  <div class="projects-grid">
 
-# -------------------- CUSTOM CSS --------------------
-st.markdown("""
-<style>
-    body {background-color:#0b0f16; color:#e8edf2;}
-    .main {background-color:#0b0f16;}
-    h1,h2,h3,h4 {color:#fff;}
-    .css-1cpxqw2, .stTextInput>div>div>input {color:#fff !important;}
-    .stButton>button {
-        background:linear-gradient(135deg,#ff6b9d,#e5527e);
-        border:none;color:white;padding:0.6rem 1.6rem;
-        border-radius:8px;font-weight:600;
-        transition:all .3s;
-    }
-    .stButton>button:hover {transform:translateY(-2px);
-        box-shadow:0 4px 15px rgba(255,107,157,0.3);}
-    .banner {
-        background:linear-gradient(135deg,#ff6b9d 0%,#e5527e 40%,#6366f1 100%);
-        padding:1.2rem;border-radius:14px;text-align:center;
-        color:#fff;margin-bottom:1.5rem;box-shadow:0 5px 20px rgba(0,0,0,0.25);
-    }
-    .footer {text-align:center;color:#9ba3b1;font-size:0.9rem;margin-top:2rem;}
-</style>
-""", unsafe_allow_html=True)
+    <!-- 🧠 PROJECT 1: AI Document Assistant -->
+    <div class="project-card">
+      <div class="project-header">
+        <h3>AI-Powered Document Assistant (RAG Application)</h3>
+        <p>AI chatbot that lets users upload PDFs and ask questions — built with Retrieval-Augmented Generation (RAG).</p>
+      </div>
 
-# -------------------- HEADER --------------------
-st.markdown("""
-<div class="banner">
-    <h2>📄 AI Document Assistant</h2>
-    <p>Built by <b>Winnie Kenneth</b> – Final-Year Computer Science Student, University of Hull</p>
-</div>
-""", unsafe_allow_html=True)
+      <div class="meta-grid">
+        <div class="meta">
+          <h5>Objective</h5>
+          <div>Automate document understanding with natural-language Q&A.</div>
+        </div>
+        <div class="meta">
+          <h5>Timeline</h5>
+          <div>2-Week Rapid Development Sprint</div>
+        </div>
+        <div class="meta">
+          <h5>Role</h5>
+          <div>Full-Stack AI Developer</div>
+        </div>
+        <div class="meta">
+          <h5>Tech Stack</h5>
+          <div>Python, LangChain, OpenAI API, Streamlit, ChromaDB, PyPDF</div>
+        </div>
+      </div>
 
-# -------------------- API KEY --------------------
-try:
-    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-except KeyError:
-    st.error("⚠️ Missing OpenAI API key in Streamlit Secrets.")
-    st.stop()
+      <div class="project-details">
+        <div class="detail-section">
+          <h5><i class="fas fa-robot"></i> Key Features</h5>
+          <ul>
+            <li>Uploads and parses PDFs into semantic chunks using LangChain.</li>
+            <li>Embeds and stores data in a vector database for retrieval.</li>
+            <li>Generates accurate context-based answers with GPT-3.5-Turbo.</li>
+            <li>Provides a real-time chat interface for interactive document analysis.</li>
+          </ul>
+        </div>
 
-# -------------------- FILE UPLOAD --------------------
-uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
+        <div class="detail-section">
+          <h5><i class="fas fa-lightbulb"></i> Real-World Use Cases</h5>
+          <ul>
+            <li>Legal contract analysis and compliance review.</li>
+            <li>HR document query automation for internal teams.</li>
+            <li>Academic research summarisation and knowledge retrieval.</li>
+          </ul>
+        </div>
 
-if uploaded_file:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-        tmp_file.write(uploaded_file.read())
-        tmp_path = tmp_file.name
+        <div class="detail-section">
+          <h5><i class="fas fa-trophy"></i> Achievements</h5>
+          <ul>
+            <li>Deployed live on Streamlit Cloud with production-ready backend.</li>
+            <li>Delivered a working AI system from concept to deployment in two weeks.</li>
+            <li>Demonstrates end-to-end understanding of LLM pipelines and UI integration.</li>
+          </ul>
+        </div>
+      </div>
 
-    with st.spinner("🔍 Processing your document..."):
-        try:
-            # load pdf
-            loader = PyPDFLoader(tmp_path)
-            docs = loader.load()
+      <!-- ✅ Buttons -->
+      <div class="cta" style="margin-top:2rem">
+        <a class="btn primary" href="https://ai-document-assistant-whiney001.streamlit.app" target="_blank" rel="noopener">
+          <i class="fas fa-globe"></i> Live Demo
+        </a>
+        <a class="btn secondary" href="https://github.com/whiney001/ai-document-assistant" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
+    </div>
 
-            # split text
-            splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-            chunks = splitter.split_documents(docs)
+    <!-- 🚚 PROJECT 2: Smart City Delivery Optimisation -->
+    <div class="project-card">
+      <div class="project-header">
+        <h3>Smart City Delivery Optimisation</h3>
+        <p>Predictive routing and AI-based optimisation model for efficient urban deliveries.</p>
+      </div>
 
-            # temp folder for chroma to prevent tenant error
-            chroma_tmp = tempfile.mkdtemp()
-            embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-            vectorstore = Chroma.from_documents(
-                chunks, embedding=embeddings, persist_directory=chroma_tmp
-            )
+      <div class="meta-grid">
+        <div class="meta">
+          <h5>Objective</h5>
+          <div>Reduce delivery time and cost using ML and path-finding algorithms.</div>
+        </div>
+        <div class="meta">
+          <h5>Role</h5>
+          <div>Data Scientist & Python Developer</div>
+        </div>
+        <div class="meta">
+          <h5>Tech Stack</h5>
+          <div>Python, NumPy, Pandas, BFS, Dijkstra, Neural Networks</div>
+        </div>
+      </div>
 
-            # retrieval + llm
-            retriever = vectorstore.as_retriever(search_kwargs={"k":3})
-            llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
-            qa = RetrievalQA.from_chain_type(
-                llm=llm, chain_type="stuff", retriever=retriever, return_source_documents=True
-            )
+      <div class="project-details">
+        <div class="detail-section">
+          <h5><i class="fas fa-cogs"></i> Highlights</h5>
+          <ul>
+            <li>Designed regression and neural network models to predict traversal costs.</li>
+            <li>Implemented A*, BFS, and Dijkstra algorithms for shortest-path prediction.</li>
+            <li>Evaluated performance using accuracy, RMSE, and training-time metrics.</li>
+          </ul>
+        </div>
+      </div>
 
-            st.success(f"✅ Document processed ({len(docs)} pages). Ask your questions below!")
+      <div class="cta" style="margin-top:2rem">
+        <a class="btn secondary" href="https://github.com/whiney001/smartcity-delivery" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
+    </div>
 
-            # QUESTION INPUT
-            question = st.text_input("💬 Ask a question about your document:")
+    <!-- 💼 PROJECT 3: LightHR Fairness Analytics -->
+    <div class="project-card">
+      <div class="project-header">
+        <h3>LightHR – AI Fairness & Bias Detection</h3>
+        <p>Exploratory HR screening dataset project evaluating bias and fairness in AI recruitment tools.</p>
+      </div>
 
-            if question:
-                with st.spinner("Thinking..."):
-                    result = qa({"query": question})
-                    st.markdown("### ✨ Answer")
-                    st.write(result["result"])
+      <div class="meta-grid">
+        <div class="meta">
+          <h5>Objective</h5>
+          <div>Analyse bias in automated resume-screening using fairness metrics.</div>
+        </div>
+        <div class="meta">
+          <h5>Role</h5>
+          <div>Data Scientist</div>
+        </div>
+        <div class="meta">
+          <h5>Tech Stack</h5>
+          <div>Python, Pandas, Scikit-learn, Matplotlib, Association Rule Mining</div>
+        </div>
+      </div>
 
-                    with st.expander("📚 Source text used"):
-                        for i, doc in enumerate(result["source_documents"]):
-                            st.markdown(f"**Chunk {i+1}:**")
-                            st.text(doc.page_content[:600] + "...")
-                            st.markdown("---")
+      <div class="project-details">
+        <div class="detail-section">
+          <h5><i class="fas fa-balance-scale"></i> Results</h5>
+          <ul>
+            <li>Measured fairness using statistical parity and disparate impact ratios.</li>
+            <li>Implemented pre-processing mitigation using data discretisation and sampling.</li>
+            <li>Produced interpretable visual analytics dashboards for HR stakeholders.</li>
+          </ul>
+        </div>
+      </div>
 
-        except Exception as e:
-            st.error(f"Error: {str(e)}")
-        finally:
-            if os.path.exists(tmp_path): os.remove(tmp_path)
-            if os.path.exists(chroma_tmp): shutil.rmtree(chroma_tmp)
+      <div class="cta" style="margin-top:2rem">
+        <a class="btn secondary" href="https://github.com/whiney001/lighthr" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
+    </div>
 
-else:
-    st.info("""
-    **How to use**
-    1. Upload a PDF document  
-    2. Wait for it to be processed  
-    3. Ask any question – summaries, insights, or keyword lookups  
-    """)
+  </div>
+</section>
+<!-- 💻 PROJECTS SECTION -->
+<section id="projects" class="projects">
+  <h2 class="section-title">Featured Projects</h2>
+  <p class="section-subtitle">
+    A showcase of full-stack, AI, and software engineering projects I've developed as a final-year Computer Science student.
+  </p>
 
-# -------------------- FOOTER --------------------
-st.markdown("""
-<div class="footer">
-    <p>Powered by LangChain ⚙️ OpenAI 🤖 Streamlit ☁️</p>
-    <p>
-        <a href="https://whiney001.github.io" style="color:#ff6b9d;">Portfolio</a> |
-        <a href="https://github.com/Whiney001" style="color:#ff6b9d;">GitHub</a> |
-        <a href="https://linkedin.com/in/winnie-kenneth-28a862287" style="color:#ff6b9d;">LinkedIn</a>
-    </p>
-</div>
-""", unsafe_allow_html=True)
+  <div class="projects-grid">
+
+    <!-- 🧠 PROJECT 1: AI Document Assistant -->
+    <div class="project-card">
+      <div class="project-header">
+        <h3>AI-Powered Document Assistant (RAG Application)</h3>
+        <p>AI chatbot that lets users upload PDFs and ask questions — built with Retrieval-Augmented Generation (RAG).</p>
+      </div>
+
+      <div class="meta-grid">
+        <div class="meta">
+          <h5>Objective</h5>
+          <div>Automate document understanding with natural-language Q&A.</div>
+        </div>
+        <div class="meta">
+          <h5>Timeline</h5>
+          <div>2-Week Rapid Development Sprint</div>
+        </div>
+        <div class="meta">
+          <h5>Role</h5>
+          <div>Full-Stack AI Developer</div>
+        </div>
+        <div class="meta">
+          <h5>Tech Stack</h5>
+          <div>Python, LangChain, OpenAI API, Streamlit, ChromaDB, PyPDF</div>
+        </div>
+      </div>
+
+      <div class="project-details">
+        <div class="detail-section">
+          <h5><i class="fas fa-robot"></i> Key Features</h5>
+          <ul>
+            <li>Uploads and parses PDFs into semantic chunks using LangChain.</li>
+            <li>Embeds and stores data in a vector database for retrieval.</li>
+            <li>Generates accurate context-based answers with GPT-3.5-Turbo.</li>
+            <li>Provides a real-time chat interface for interactive document analysis.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h5><i class="fas fa-lightbulb"></i> Real-World Use Cases</h5>
+          <ul>
+            <li>Legal contract analysis and compliance review.</li>
+            <li>HR document query automation for internal teams.</li>
+            <li>Academic research summarisation and knowledge retrieval.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h5><i class="fas fa-trophy"></i> Achievements</h5>
+          <ul>
+            <li>Deployed live on Streamlit Cloud with production-ready backend.</li>
+            <li>Delivered a working AI system from concept to deployment in two weeks.</li>
+            <li>Demonstrates end-to-end understanding of LLM pipelines and UI integration.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ✅ Buttons -->
+      <div class="cta" style="margin-top:2rem">
+        <a class="btn primary" href="https://ai-document-assistant-whiney001.streamlit.app" target="_blank" rel="noopener">
+          <i class="fas fa-globe"></i> Live Demo
+        </a>
+        <a class="btn secondary" href="https://github.com/whiney001/ai-document-assistant" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- 🚚 PROJECT 2: Smart City Delivery Optimisation -->
+    <div class="project-card">
+      <div class="project-header">
+        <h3>Smart City Delivery Optimisation</h3>
+        <p>Predictive routing and AI-based optimisation model for efficient urban deliveries.</p>
+      </div>
+
+      <div class="meta-grid">
+        <div class="meta">
+          <h5>Objective</h5>
+          <div>Reduce delivery time and cost using ML and path-finding algorithms.</div>
+        </div>
+        <div class="meta">
+          <h5>Role</h5>
+          <div>Data Scientist & Python Developer</div>
+        </div>
+        <div class="meta">
+          <h5>Tech Stack</h5>
+          <div>Python, NumPy, Pandas, BFS, Dijkstra, Neural Networks</div>
+        </div>
+      </div>
+
+      <div class="project-details">
+        <div class="detail-section">
+          <h5><i class="fas fa-cogs"></i> Highlights</h5>
+          <ul>
+            <li>Designed regression and neural network models to predict traversal costs.</li>
+            <li>Implemented A*, BFS, and Dijkstra algorithms for shortest-path prediction.</li>
+            <li>Evaluated performance using accuracy, RMSE, and training-time metrics.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cta" style="margin-top:2rem">
+        <a class="btn secondary" href="https://github.com/whiney001/smartcity-delivery" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- 💼 PROJECT 3: LightHR Fairness Analytics -->
+    <div class="project-card">
+      <div class="project-header">
+        <h3>LightHR – AI Fairness & Bias Detection</h3>
+        <p>Exploratory HR screening dataset project evaluating bias and fairness in AI recruitment tools.</p>
+      </div>
+
+      <div class="meta-grid">
+        <div class="meta">
+          <h5>Objective</h5>
+          <div>Analyse bias in automated resume-screening using fairness metrics.</div>
+        </div>
+        <div class="meta">
+          <h5>Role</h5>
+          <div>Data Scientist</div>
+        </div>
+        <div class="meta">
+          <h5>Tech Stack</h5>
+          <div>Python, Pandas, Scikit-learn, Matplotlib, Association Rule Mining</div>
+        </div>
+      </div>
+
+      <div class="project-details">
+        <div class="detail-section">
+          <h5><i class="fas fa-balance-scale"></i> Results</h5>
+          <ul>
+            <li>Measured fairness using statistical parity and disparate impact ratios.</li>
+            <li>Implemented pre-processing mitigation using data discretisation and sampling.</li>
+            <li>Produced interpretable visual analytics dashboards for HR stakeholders.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cta" style="margin-top:2rem">
+        <a class="btn secondary" href="https://github.com/whiney001/lighthr" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
